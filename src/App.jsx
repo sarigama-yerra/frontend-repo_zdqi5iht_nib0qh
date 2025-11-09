@@ -1,28 +1,48 @@
-import { useState } from 'react'
+import React, { useCallback, useState } from 'react';
+import HeroCover from './components/HeroCover';
+import TraceabilityMap from './components/TraceabilityMap';
+import ContractsPanel from './components/ContractsPanel';
+import ForecastAndNDVI from './components/ForecastAndNDVI';
+import IoTAndESG from './components/IoTAndESG';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedLot, setSelectedLot] = useState(null);
+
+  const handleNdviCheck = useCallback((value) => {
+    if (value > 0.62) {
+      // Could notify contracts panel via events/state bus; simple alert for demo
+      console.log('NDVI threshold met, settlement can be released');
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
+    <div className="min-h-screen bg-[#0b1020] px-4 py-6 text-white md:px-8 md:py-8">
+      <header className="mb-6">
+        <div className="mb-3 text-xs text-white/60">FertiChain.AI</div>
+        <HeroCover />
+      </header>
+
+      <main className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="md:col-span-2">
+            <TraceabilityMap onSelectLot={setSelectedLot} />
+          </div>
+          <div>
+            <ContractsPanel selectedLot={selectedLot} />
+          </div>
         </div>
-      </div>
+
+        <ForecastAndNDVI onNdviCheck={handleNdviCheck} />
+
+        <IoTAndESG selectedLot={selectedLot} />
+      </main>
+
+      <footer className="mt-10 flex items-center justify-between border-t border-white/10 pt-4 text-xs text-white/60">
+        <span>© 2025 FertiChain.AI • Flame Blue Industrial Intelligence</span>
+        <span>AI • IoT • NDVI • Blockchain</span>
+      </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
